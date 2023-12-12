@@ -1,0 +1,64 @@
+services:
+  hub-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: hub-api
+    container_name: hub-api
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - hub-network-api
+
+  hub-nginx:
+    image: nginx:latest
+    container_name: hub-nginx
+    restart: unless-stopped
+    ports:
+      - 8001:80
+    volumes:
+      - ./:/var/www
+      - ./nginx:/etc/nginx/conf.d
+    networks:
+      - hub-network-api
+
+  hub-db:
+    image: mysql:8.0
+    container_name: hub-api-db
+    environment:
+      MYSQL_DATABASE: hub-api
+      MYSQL_ROOT_PASSWORD: hub-api
+      MYSQL_PASSWORD: hub-api
+      MYSQL_USER: hub-api
+    restart: unless-stopped
+    ports:
+      - 3310:3306
+    volumes:
+      - ./mysql/data:/docker-entrypoint-initdb.d
+    networks:
+      - hub-network-api
+
+  hub-phpmyadmin:
+    image: phpmyadmin:5.1
+    container_name: hub-phpmyadmin
+    depends_on:
+      - hub-db
+    networks:
+      - hub-network-api
+    environment:
+      - PMA_HOST=hub-db
+      - PMA_PORT=3306
+      - PMA_USER=root
+      - PMA_PASSWORD=hub-api
+
+  hub-redis:
+    image: redis:6.2
+    container_name: hub-redis
+    networks:
+      - hub-network-api
+
+networks:
+  hub-network-api:
+    driver: bridge
