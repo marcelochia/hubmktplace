@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Events\PlatformNotificationReceived;
+use App\Events\ProductInformationObteined;
 use App\Listeners\GetProductInformation;
+use App\Listeners\UpdateProductInDatabase;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         PlatformNotificationReceived::class => [
             GetProductInformation::class,
+        ],
+        ProductInformationObteined::class => [
+            UpdateProductInDatabase::class,
         ],
     ];
 

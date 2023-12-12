@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\ProductInformationObteined;
 use App\Gateway\PlatformGateway;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -24,10 +25,8 @@ class GetProductInformationJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(): void
+    public function handle(PlatformGateway $platformGateway): void
     {
-        $platformGateway = new PlatformGateway();
-
         Log::info('Processando o produto a referência: ' . $this->productReference);
 
         try {
@@ -43,8 +42,6 @@ class GetProductInformationJob implements ShouldQueue
             return;
         }
 
-        Log::info("Produto com a referência {$this->productReference} processado.", [
-            'title' => $product->title
-        ]);
+        ProductInformationObteined::dispatch($product);
     }
 }
