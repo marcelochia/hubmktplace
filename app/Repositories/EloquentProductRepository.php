@@ -46,5 +46,7 @@ class EloquentProductRepository implements ProductRepository
         $registry->status = $product->status;
         $registry->quantity = $product->quantity;
         $registry->save();
+
+        $product->setId($registry->id);
     }
 }

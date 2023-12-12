@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property string $status
  * @property float $price
- * @property float $promotional_price
- * @property \DateTime $promotion_starts_on
- * @property \DateTime $promotion_ends_on
+ * @property null|float $promotional_price
+ * @property null|\DateTime $promotion_starts_on
+ * @property null|\DateTime $promotion_ends_on
  * @property int $quantity
  */
 class Product extends Model

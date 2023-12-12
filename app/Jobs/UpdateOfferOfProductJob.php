@@ -2,9 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Entities\Product;
-use App\Events\ProductUpdated;
-use App\Intefaces\ProductRepository;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,25 +10,21 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class UpdateProductJob implements ShouldQueue
+class UpdateOfferOfProductJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(protected Product $product)
+    public function __construct(protected int $productId, protected int $offerId)
     {}
 
     /**
      * Execute the job.
      */
-    public function handle(ProductRepository $productRepository): void
+    public function handle(): void
     {
-        $productRepository->update($this->product);
-
-        Log::info("Produto {$this->product->reference} atualizado no banco de dados.");
-
-        ProductUpdated::dispatch($this->product->id);
+        Log::debug('UpdateOfferOfProductJob', [$this->productId, $this->offerId]);
     }
 }

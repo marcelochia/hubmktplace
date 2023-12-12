@@ -32,9 +32,9 @@ class PlatformGateway
                 title: $data['title'],
                 status: $data['status'],
                 price: (float) $data['price'],
-                promotionalPrice: $data['promotional_price'],
-                promotionStartsOn: \DateTime::createFromFormat('Y-m-d H:i:s', $data['promotion_starts_on']),
-                promotionEndsOn: \DateTime::createFromFormat('Y-m-d H:i:s', $data['promotion_ends_on']),
+                promotionalPrice: isset($data['promotional_price']) ? $data['promotional_price'] : null,
+                promotionStartsOn: isset($data['promotion_starts_on']) ? \DateTime::createFromFormat('Y-m-d H:i:s', $data['promotion_starts_on']) : null,
+                promotionEndsOn: isset($data['promotion_ends_on']) ? \DateTime::createFromFormat('Y-m-d H:i:s', $data['promotion_ends_on']) : null,
                 quantity: (int) $data['quantity'],
             );
         } catch (\Exception $e) {
