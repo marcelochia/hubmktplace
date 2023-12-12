@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entities\Platform;
+namespace App\Entities;
 
 readonly class Product
 {
@@ -12,6 +12,7 @@ readonly class Product
         public float $promotionalPrice,
         public \DateTime $promotionStartsOn,
         public \DateTime $promotionEndsOn,
-        public int $quantity
+        public int $quantity,
+        public ?int $id = null
     ) {}
 }

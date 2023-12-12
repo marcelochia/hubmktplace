@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Entities\Platform\Product;
+use App\Entities\Product;
 use App\Intefaces\ProductRepository;
 use App\Models\Product as ProductModel;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +14,27 @@ class EloquentProductRepository implements ProductRepository
     public function __construct()
     {
         $this->model = new ProductModel();
+    }
+
+    public function findByReference(string $reference): ?Product
+    {
+        /** @var ProductModel $product */
+        $product = $this->model::where('reference', $reference)->first();
+
+        if (is_null($product)) {
+            return null;
+        }
+
+        return new Product(
+            reference: $product->reference,
+            title: $product->title,
+            status: $product->status,
+            price: $product->price,
+            promotionalPrice: $product->promotional_price,
+            promotionStartsOn: $product->promotion_starts_on,
+            promotionEndsOn: $product->promotion_ends_on,
+            quantity: $product->quantity
+        );
     }
 
     public function update(Product $product): void

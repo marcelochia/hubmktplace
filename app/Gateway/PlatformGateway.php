@@ -2,7 +2,7 @@
 
 namespace App\Gateway;
 
-use App\Entities\Platform\Product;
+use App\Entities\Product;
 use App\Exceptions\GatewayException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;

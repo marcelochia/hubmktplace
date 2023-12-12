@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Entities\Platform\Product;
+use App\Entities\Product;
 use App\Intefaces\ProductRepository;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;

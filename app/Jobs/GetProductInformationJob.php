@@ -27,7 +27,7 @@ class GetProductInformationJob implements ShouldQueue
      */
     public function handle(PlatformGateway $platformGateway): void
     {
-        Log::info('Processando o produto a referência: ' . $this->productReference);
+        Log::info('Processando o produto com a referência: ' . $this->productReference);
 
         try {
             $product = $platformGateway->getProductInformation($this->productReference);

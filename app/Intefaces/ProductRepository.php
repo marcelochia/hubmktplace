@@ -2,9 +2,10 @@
 
 namespace App\Intefaces;
 
-use App\Entities\Platform\Product;
+use App\Entities\Product;
 
 interface ProductRepository
 {
+    public function findByReference(string $reference): ?Product;
     public function update(Product $product): void;
 }

@@ -16,7 +16,7 @@ class WebhookController extends Controller
         PlatformNotificationReceived::dispatch($productReference, $scope);
 
         return response()->json([
-            'message' => 'Notificação recebida e enviada para a fila de processamento.',
+            'message' => 'Notificação recebida.',
             'product_reference' => $productReference
         ]);
     }
