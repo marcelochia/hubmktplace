@@ -16,6 +16,30 @@ class EloquentProductRepository implements ProductRepository
         $this->model = new ProductModel();
     }
 
+    public function get(int $id): ?Product
+    {
+        /** @var ProductModel $registry */
+        $registry = $this->model::find($id);
+
+        if (is_null($registry)) {
+            return null;
+        }
+
+        $product = new Product(
+            reference: $registry->reference,
+            title: $registry->title,
+            status: $registry->status,
+            price: $registry->price,
+            promotionalPrice: $registry->promotional_price,
+            promotionStartsOn: $registry->promotion_starts_on,
+            promotionEndsOn: $registry->promotion_ends_on,
+            quantity: $registry->quantity
+        );
+        $product->setId($registry->id);
+
+        return $product;
+    }
+
     public function findByReference(string $reference): ?Product
     {
         /** @var ProductModel $product */

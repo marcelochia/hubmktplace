@@ -2,6 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Enums\ProductStatusEnum;
+use App\Services\OfferService;
+use App\Services\ProductService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -23,8 +26,22 @@ class UpdateOfferOfProductJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(): void
+    public function handle(OfferService $offerService, ProductService $productService): void
     {
-        Log::debug('UpdateOfferOfProductJob', [$this->productId, $this->offerId]);
+        $product = $productService->getProduct($this->productId);
+
+        $offer = $offerService->getOffer($this->offerId);
+
+        $statusIsUpdatedInOffer = $offerService::statusIsUpdatedInOffer($offer->getStatus(), $product->status);
+
+        if ($statusIsUpdatedInOffer) {
+            return;
+        }
+
+        $oldOfferStatus = $offer->getStatus();
+
+        $offerService->updateOfferStatusFromProductStatus($offer, ProductStatusEnum::tryFrom($product->status));
+
+        Log::info("Atualização do status do anúncio {$offer->getReference()} de '$oldOfferStatus' para '{$offer->getStatus()}'");
     }
 }
