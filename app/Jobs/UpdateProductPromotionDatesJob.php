@@ -12,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class UpdateProductPriceJob implements ShouldQueue
+class UpdateProductPromotionDatesJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -27,23 +27,18 @@ class UpdateProductPriceJob implements ShouldQueue
      */
     public function handle(OfferService $offerService, ProductService $productService): void
     {
+        $offer = $offerService->getOffer($this->offerId);
         $product = $productService->getProduct($this->productId);
 
-        $offer = $offerService->getOffer($this->offerId);
-
-        Log::debug('preços', [
-            'product' => $product->getPrice(),
-            'offer' => $offer->getPrice(),
-        ]);
-
-        if ($product->getPrice() === $offer->getPrice()) {
+        if (($product->getPromotionStartsOn() === $offer->getSaleStartsOn()) && ($product->getPromotionalEndsOn() === $offer->getSaleEndsOn())) {
             return;
         }
 
-        $oldProductPrice = $product->getPrice();
+        $oldProductPromotionStartDate = $product->getPromotionStartsOn();
+        $oldProductPromotionEndDate = $product->getPromotionalEndsOn();
 
-        $productService->updatePrice($product, $offer->getPrice());
+        $productService->updatePromotionalPrice($product, $offer->getSalePrice());
 
-        Log::info("Atualização do preço do produto {$product->getReference()} de '$oldProductPrice' para '{$product->getPrice()}'");
+        Log::info("Atualização do período promocional do produto {$product->getReference()} de '$oldProductPromotionStartDate até $oldProductPromotionEndDate' para '{$product->getPromotionStartsOn()} até {$product->getPromotionalEndsOn()}'");
     }
 }

@@ -3,14 +3,13 @@
 namespace App\Listeners;
 
 use App\Events\ProductUpdated;
+use App\Events\RelationsOfProductAndOffersFound;
 use App\Intefaces\RelationRepository;
-use App\Jobs\UpdateOfferStatusJob;
-use App\Jobs\UpdateProductPriceJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
 
-class VerifyOffersAndProductInfo
+class GetRelationsOfProductAndOffers
 {
     /**
      * Create the event listener.
@@ -34,8 +33,7 @@ class VerifyOffersAndProductInfo
 
         /** @var \App\Entities\Relation $relation */
         foreach ($relations as $relation) {
-            UpdateOfferStatusJob::dispatch($relation->productId, $relation->offerId);
-            UpdateProductPriceJob::dispatch($relation->productId, $relation->offerId);
+            RelationsOfProductAndOffersFound::dispatch($relation->productId, $relation->offerId);
         }
     }
 }

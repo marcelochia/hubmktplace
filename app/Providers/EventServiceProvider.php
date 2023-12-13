@@ -5,9 +5,15 @@ namespace App\Providers;
 use App\Events\PlatformNotificationReceived;
 use App\Events\ProductInformationObteined;
 use App\Events\ProductUpdated;
+use App\Events\RelationsOfProductAndOffersFound;
 use App\Listeners\GetProductInformation;
+use App\Listeners\UpdateOfferStatus;
 use App\Listeners\UpdateProductInDatabase;
-use App\Listeners\VerifyOffersAndProductInfo;
+use App\Listeners\GetRelationsOfProductAndOffers;
+use App\Listeners\UpdateOfferPrice;
+use App\Listeners\UpdateOfferSaleDates;
+use App\Listeners\UpdateOfferSalePrice;
+use App\Listeners\UpdateOfferStock;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -31,7 +37,14 @@ class EventServiceProvider extends ServiceProvider
             UpdateProductInDatabase::class,
         ],
         ProductUpdated::class => [
-            VerifyOffersAndProductInfo::class,
+            GetRelationsOfProductAndOffers::class,
+        ],
+        RelationsOfProductAndOffersFound::class => [
+            UpdateOfferStatus::class,
+            UpdateOfferPrice::class,
+            UpdateOfferSalePrice::class,
+            UpdateOfferSaleDates::class,
+            UpdateOfferStock::class,
         ],
     ];
 

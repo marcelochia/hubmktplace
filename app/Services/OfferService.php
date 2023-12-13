@@ -25,26 +25,51 @@ class OfferService
         return $offer;
     }
 
-    public function updateOfferStatusFromProductStatus(Offer $offer, ProductStatusEnum $newStatus): void
+    public function updatePrice(int $offerId, float $price): void
     {
-        $newStatus = $this->mapProductStatusToOfferStatus($newStatus);
+        $offer = $this->getOffer($offerId);
 
-        $offer->changeStatus($newStatus->value);
+        $offer->changePrice($price);
 
         $this->offerRepository->update($offer);
     }
 
-    public static function statusIsUpdatedInOffer(string $offerStatus, string $productStatus): bool
+    public function updateSalePrice(int $offerId, ?float $salePrice): void
     {
-        if ($offerStatus === $productStatus) {
-            return true;
-        }
+        $offer = $this->getOffer($offerId);
 
-        if ($offerStatus === OfferStatusEnum::PAUSED->value && $productStatus === ProductStatusEnum::INACTIVE->value) {
-            return true;
-        }
+        $offer->changeSalePrice($salePrice);
 
-        return false;
+        $this->offerRepository->update($offer);
+    }
+
+    public function updateSaleDates(int $offerId, ?\DateTime $startDate, ?\DateTime $endDate): void
+    {
+        $offer = $this->getOffer($offerId);
+
+        $offer->changeSaleDates($startDate, $endDate);
+
+        $this->offerRepository->update($offer);
+    }
+
+    public function updateStock(int $offerId, int $stock): void
+    {
+        $offer = $this->getOffer($offerId);
+
+        $offer->changeStock($stock);
+
+        $this->offerRepository->update($offer);
+    }
+
+    public function updateOfferStatusFromProductStatus($offerId, ProductStatusEnum $status): void
+    {
+        $offer = $this->getOffer($offerId);
+
+        $status = $this->mapProductStatusToOfferStatus($status);
+
+        $offer->changeStatus($status->value);
+
+        $this->offerRepository->update($offer);
     }
 
     private function mapProductStatusToOfferStatus(ProductStatusEnum $productStatus): OfferStatusEnum

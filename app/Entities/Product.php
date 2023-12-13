@@ -100,12 +100,7 @@ class Product
         return $this->promotionStartsOn;
     }
 
-    public function changePromotionStartsOn(?\DateTime $promotionStartsOn): void
-    {
-        $this->promotionStartsOn = $promotionStartsOn;
-    }
-
-    public function getPromotionEndsOn(): ?\DateTime
+    public function getPromotionalEndsOn(): ?\DateTime
     {
         return $this->promotionEndsOn;
     }

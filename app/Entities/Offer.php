@@ -99,20 +99,22 @@ class Offer extends BaseEntity
         return $this->saleStartsOn;
     }
 
-    public function changeSaleStartsOn(?\DateTime $saleStartsOn): void
-    {
-        $this->saleStartsOn = $saleStartsOn;
-
-    }
-
     public function getSaleEndsOn(): ?\DateTime
     {
         return $this->saleEndsOn;
     }
 
-    public function changeSaleEndsOn(?\DateTime $saleEndsOn): void
+    /**
+     * @throws \DomainException se a data de início for posterior à data de término
+     */
+    public function changeSaleDates(?\DateTime $startDate, ?\DateTime $endDate): void
     {
-        $this->saleEndsOn = $saleEndsOn;
+        if ((!is_null($startDate) && !is_null($endDate)) && ($startDate >= $endDate)) {
+            throw new \DomainException('A data de início deve ser anterior à data de término.');
+        }
+
+        $this->saleStartsOn = $startDate;
+        $this->saleEndsOn = $endDate;
     }
 
     public function getStock(): int
