@@ -13,14 +13,14 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class UpdateProductJob implements ShouldQueue
+class UpdateProductFromPlatformJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(protected Product $product)
+    public function __construct(protected Product $productFromPlatform)
     {}
 
     /**
@@ -28,10 +28,12 @@ class UpdateProductJob implements ShouldQueue
      */
     public function handle(ProductRepository $productRepository): void
     {
-        $productRepository->update($this->product);
+        $productRepository->update($this->productFromPlatform);
 
-        Log::info("Produto {$this->product->reference} atualizado no banco de dados.");
+        Log::info("Produto {$this->productFromPlatform->getReference()} atualizado no banco de dados.");
 
-        ProductUpdated::dispatch($this->product->id);
+        $product = $productRepository->findByReference($this->productFromPlatform->getReference());
+
+        ProductUpdated::dispatch($product->getId());
     }
 }

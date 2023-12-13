@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Enums\ProductStatusEnum;
 use App\Services\OfferService;
 use App\Services\ProductService;
 use Illuminate\Bus\Queueable;
@@ -13,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class UpdateOfferOfProductJob implements ShouldQueue
+class UpdateProductPriceJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -32,16 +31,19 @@ class UpdateOfferOfProductJob implements ShouldQueue
 
         $offer = $offerService->getOffer($this->offerId);
 
-        $statusIsUpdatedInOffer = $offerService::statusIsUpdatedInOffer($offer->getStatus(), $product->status);
+        Log::debug('preços', [
+            'product' => $product->getPrice(),
+            'offer' => $offer->getPrice(),
+        ]);
 
-        if ($statusIsUpdatedInOffer) {
+        if ($product->getPrice() === $offer->getPrice()) {
             return;
         }
 
-        $oldOfferStatus = $offer->getStatus();
+        $oldProductPrice = $product->getPrice();
 
-        $offerService->updateOfferStatusFromProductStatus($offer, ProductStatusEnum::tryFrom($product->status));
+        $productService->updatePrice($product, $offer->getPrice());
 
-        Log::info("Atualização do status do anúncio {$offer->getReference()} de '$oldOfferStatus' para '{$offer->getStatus()}'");
+        Log::info("Atualização do preço do produto {$product->getReference()} de '$oldProductPrice' para '{$product->getPrice()}'");
     }
 }

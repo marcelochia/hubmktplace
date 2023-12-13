@@ -43,7 +43,7 @@ class EloquentOfferRepository implements OfferRepository
     public function update(Offer $offer): void
     {
         /** @var OfferModel $registry */
-        $registry = $this->model::find($offer->id);
+        $registry = $this->model::find($offer->getId());
 
         $registry->reference = $offer->getReference();
         $registry->title = $offer->getTitle();

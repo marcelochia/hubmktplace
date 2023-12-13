@@ -4,7 +4,7 @@ namespace App\Entities;
 
 class Offer extends BaseEntity
 {
-    public readonly int $id;
+    private readonly int $id;
     private string $reference;
     private string $title;
     private string $status;

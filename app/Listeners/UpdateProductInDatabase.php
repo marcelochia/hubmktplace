@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\ProductInformationObteined;
-use App\Jobs\UpdateProductJob;
+use App\Jobs\UpdateProductFromPlatformJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -20,6 +20,6 @@ class UpdateProductInDatabase
      */
     public function handle(ProductInformationObteined $event): void
     {
-        UpdateProductJob::dispatch($event->product);
+        UpdateProductFromPlatformJob::dispatch($event->product);
     }
 }

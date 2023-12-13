@@ -22,4 +22,11 @@ class ProductService
 
         return $product;
     }
+
+    public function updatePrice(Product $product, float $newPrice): void
+    {
+        $product->changePrice($newPrice);
+
+        $this->repository->update($product);
+    }
 }

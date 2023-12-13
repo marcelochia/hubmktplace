@@ -42,35 +42,36 @@ class EloquentProductRepository implements ProductRepository
 
     public function findByReference(string $reference): ?Product
     {
-        /** @var ProductModel $product */
-        $product = $this->model::where('reference', $reference)->first();
+        /** @var ProductModel $registry */
+        $registry = $this->model::where('reference', $reference)->first();
 
-        if (is_null($product)) {
+        if (is_null($registry)) {
             return null;
         }
 
-        return new Product(
-            reference: $product->reference,
-            title: $product->title,
-            status: $product->status,
-            price: $product->price,
-            promotionalPrice: $product->promotional_price,
-            promotionStartsOn: $product->promotion_starts_on,
-            promotionEndsOn: $product->promotion_ends_on,
-            quantity: $product->quantity
+        $product = new Product(
+            reference: $registry->reference,
+            title: $registry->title,
+            status: $registry->status,
+            price: $registry->price,
+            promotionalPrice: $registry->promotional_price,
+            promotionStartsOn: $registry->promotion_starts_on,
+            promotionEndsOn: $registry->promotion_ends_on,
+            quantity: $registry->quantity
         );
+        $product->setId($registry->id);
+
+        return $product;
     }
 
     public function update(Product $product): void
     {
         /** @var ProductModel $registry */
-        $registry = $this->model::where('reference', $product->reference)->first();
+        $registry = $this->model::where('reference', $product->getReference())->first();
 
-        $registry->price = $product->price;
-        $registry->status = $product->status;
-        $registry->quantity = $product->quantity;
+        $registry->price = $product->getPrice();
+        $registry->status = $product->getStatus();
+        $registry->quantity = $product->getQuantity();
         $registry->save();
-
-        $product->setId($registry->id);
     }
 }
