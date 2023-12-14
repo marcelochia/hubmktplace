@@ -5,8 +5,6 @@ namespace App\Listeners;
 use App\Events\RelationsOfProductAndOffersFound;
 use App\Jobs\SendNotificationToMarketPlaceJob;
 use App\Services\OfferService;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class SendNotificationToMarketplace
 {

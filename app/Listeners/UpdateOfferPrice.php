@@ -5,8 +5,6 @@ namespace App\Listeners;
 use App\Events\RelationsOfProductAndOffersFound;
 use App\Services\OfferService;
 use App\Services\ProductService;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
 
 class UpdateOfferPrice
