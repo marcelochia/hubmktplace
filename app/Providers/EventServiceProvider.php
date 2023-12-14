@@ -10,6 +10,7 @@ use App\Listeners\GetProductInformation;
 use App\Listeners\UpdateOfferStatus;
 use App\Listeners\UpdateProductInDatabase;
 use App\Listeners\GetRelationsOfProductAndOffers;
+use App\Listeners\SendNotificationToMarketplace;
 use App\Listeners\UpdateOfferPrice;
 use App\Listeners\UpdateOfferSaleDates;
 use App\Listeners\UpdateOfferSalePrice;
@@ -45,6 +46,7 @@ class EventServiceProvider extends ServiceProvider
             UpdateOfferSalePrice::class,
             UpdateOfferSaleDates::class,
             UpdateOfferStock::class,
+            SendNotificationToMarketplace::class,
         ],
     ];
 

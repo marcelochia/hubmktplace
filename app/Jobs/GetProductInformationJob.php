@@ -31,17 +31,16 @@ class GetProductInformationJob implements ShouldQueue
 
         try {
             $product = $platformGateway->getProductInformation($this->productReference);
+
+            if (is_null($product)) {
+                Log::info("Produto com a referência {$this->productReference} não existe na plataforma.");
+                return;
+            }
+
+            ProductInformationObteined::dispatch($product);
         } catch (\Exception $e) {
             $this->fail($e);
             Log::info("Não foi possível consultar o produto com a referência {$this->productReference} na plataforma.");
-            return;
         }
-
-        if (is_null($product)) {
-            Log::info("Produto com a referência {$this->productReference} não existe na plataforma.");
-            return;
-        }
-
-        ProductInformationObteined::dispatch($product);
     }
 }
