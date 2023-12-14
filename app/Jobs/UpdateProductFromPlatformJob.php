@@ -2,9 +2,12 @@
 
 namespace App\Jobs;
 
+use App\Dto\ProductDto;
 use App\Entities\Product;
 use App\Events\ProductUpdated;
+use App\Exceptions\EntityNotFoundException;
 use App\Intefaces\ProductRepository;
+use App\Services\ProductService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,19 +23,24 @@ class UpdateProductFromPlatformJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(protected Product $productFromPlatform)
+    public function __construct(protected ProductDto $productFromPlatform)
     {}
 
     /**
      * Execute the job.
      */
-    public function handle(ProductRepository $productRepository): void
+    public function handle(ProductService $productService): void
     {
-        $productRepository->update($this->productFromPlatform);
+        try {
+            $product = $productService->findProductByReference($this->productFromPlatform->reference);
+        } catch (EntityNotFoundException) {
+            Log::info("Produto {$this->productFromPlatform->reference} não encontrado no banco de dados.");
+            return;
+        }
 
-        Log::info("Produto {$this->productFromPlatform->getReference()} atualizado no banco de dados.");
+        $productService->updateProduct($product->getId(), $this->productFromPlatform);
 
-        $product = $productRepository->findByReference($this->productFromPlatform->getReference());
+        Log::info("Produto ID {$product->getId()} atualizado no banco de dados.");
 
         ProductUpdated::dispatch($product->getId());
     }

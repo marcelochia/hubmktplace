@@ -2,7 +2,7 @@
 
 namespace App\Gateway;
 
-use App\Entities\Product;
+use App\Dto\ProductDto;
 use App\Exceptions\GatewayException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -14,7 +14,7 @@ class PlatformGateway
     /**
      * @throws GatewayException quando ocorre um erro na requisição
      */
-    public function getProductInformation(string $productReference): ?Product
+    public function getProductInformation(string $productReference): ?ProductDto
     {
         $endpoint = "$this->baseUrl/$productReference";
 
@@ -27,7 +27,7 @@ class PlatformGateway
 
             $data = $response->json()['data'];
 
-            return new Product(
+            return new ProductDto(
                 reference: $data['reference'],
                 title: $data['title'],
                 status: $data['status'],

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Dto\ProductDto;
 use App\Entities\Product;
 use App\Exceptions\EntityNotFoundException;
 use App\Intefaces\ProductRepository;
@@ -21,5 +22,22 @@ class ProductService
         }
 
         return $product;
+    }
+
+    /** @throws EntityNotFoundException quando o produto não for encontrado */
+    public function findProductByReference(string $productReference): Product
+    {
+        $product = $this->repository->findByReference($productReference);
+
+        if (is_null($product)) {
+            throw new EntityNotFoundException('Produto não encontrado.');
+        }
+
+        return $product;
+    }
+
+    public function updateProduct(int $productId, ProductDto $data): void
+    {
+        $this->repository->update($productId, $data);
     }
 }

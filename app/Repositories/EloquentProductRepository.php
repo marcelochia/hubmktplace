@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Dto\ProductDto;
 use App\Entities\Product;
 use App\Intefaces\ProductRepository;
 use App\Models\Product as ProductModel;
@@ -64,14 +65,18 @@ class EloquentProductRepository implements ProductRepository
         return $product;
     }
 
-    public function update(Product $product): void
+    public function update(int $id, ProductDto $data): void
     {
         /** @var ProductModel $registry */
-        $registry = $this->model::where('reference', $product->getReference())->first();
+        $registry = $this->model::find($id);
 
-        $registry->price = $product->getPrice();
-        $registry->status = $product->getStatus();
-        $registry->quantity = $product->getQuantity();
+        $registry->title = $data->title;
+        $registry->status = $data->status;
+        $registry->price = $data->price;
+        $registry->promotional_price = $data->promotionalPrice;
+        $registry->promotion_starts_on = $data->promotionStartsOn;
+        $registry->promotion_ends_on = $data->promotionEndsOn;
+        $registry->quantity = $data->quantity;
         $registry->save();
     }
 }
